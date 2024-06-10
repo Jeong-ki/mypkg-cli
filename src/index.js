@@ -28,44 +28,50 @@ async function fetchLibraryInfo(libraryName) {
   }
 }
 
-function formatLibraryOutput(library) {
+function formatLibraryOutput(library, options) {
+  let outputText = `- ${colorize(library.name, "cyan")}\n`;
+
   if (library.isEmpty) {
-    return `- ${colorize(library.name, "cyan")}\n\n`;
-  } else {
-    return (
-      `- ${colorize(library.name, "cyan")}\n` +
-      `  ${colorize("Description:", "bold")} ${colorize(
-        library?.description || "-",
-        "green"
-      )}\n` +
-      `  ${colorize("Homepage:", "bold")} ${colorize(
-        library.homepage || "-",
-        "blue"
-      )}\n` +
-      `  ${colorize("Repository:", "bold")} ${colorize(
-        library.repository || "-",
-        "blue"
-      )}\n` +
-      `  ${colorize("Author:", "bold")} ${colorize(
-        library.author?.name || "-",
-        "yellow"
-      )}\n` +
-      `  ${colorize("Last Publish:", "bold")} ${colorize(
-        library.lastPublish || "-",
-        "magenta"
-      )}\n\n`
-    );
+    return outputText + "\n";
   }
+  if (options.desc) {
+    outputText += `  Description: ${colorize(
+      library?.description || "-",
+      "green"
+    )}\n`;
+  }
+  if (options.link) {
+    outputText += `  Homepage: ${colorize(library.homepage || "-", "blue")}\n`;
+    outputText += `  Repository: ${colorize(
+      library.repository || "-",
+      "blue"
+    )}\n`;
+  }
+  if (options.author) {
+    outputText += `  Author: ${colorize(
+      library.author?.name || "-",
+      "yellow"
+    )}\n`;
+  }
+  if (options.publish) {
+    outputText += `  Last Publish: ${colorize(
+      library.lastPublish || "-",
+      "magenta"
+    )}\n`;
+  }
+  return outputText + "\n";
 }
 
-async function analyzeLibraryGroup(libraryGroup, groupName) {
+async function analyzeLibraryGroup(libraryGroup, groupName, options) {
   const libraryNames = Object.keys(libraryGroup);
   const libraryPromises = libraryNames.map(fetchLibraryInfo);
   const libraries = await Promise.all(libraryPromises);
 
   if (libraries.length > 0) {
     let outputText = `${colorize(`[${groupName}]`, "bold")}\n`;
-    outputText += libraries.map(formatLibraryOutput).join("");
+    outputText += libraries
+      .map((library) => formatLibraryOutput(library, options))
+      .join("");
     return outputText;
   }
 
@@ -82,11 +88,19 @@ async function analyzeLibraries(packageJsonPath, options) {
   let outputText = "";
 
   if (!options.dev) {
-    outputText += await analyzeLibraryGroup(dependencies, "Dependencies");
+    outputText += await analyzeLibraryGroup(
+      dependencies,
+      "Dependencies",
+      options
+    );
   }
 
   if (!options.noDev) {
-    outputText += await analyzeLibraryGroup(devDependencies, "devDependencies");
+    outputText += await analyzeLibraryGroup(
+      devDependencies,
+      "devDependencies",
+      options
+    );
   }
 
   stopLoadingAnimation(intervalId);
@@ -95,5 +109,13 @@ async function analyzeLibraries(packageJsonPath, options) {
 
 export default function analyzePackage(options) {
   const packageJsonPath = path.join(process.cwd(), "package.json");
-  analyzeLibraries(packageJsonPath, options);
+  analyzeLibraries(packageJsonPath, {
+    ...options,
+    desc: options.desc || !(options.link || options.author || options.publish),
+    link: options.link || !(options.desc || options.author || options.publish),
+    author:
+      options.author || !(options.desc || options.link || options.publish),
+    publish:
+      options.publish || !(options.desc || options.link || options.author),
+  });
 }
