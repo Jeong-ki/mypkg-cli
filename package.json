@@ -1,0 +1,39 @@
+{
+  "name": "mypkg-cli",
+  "version": "0.0.4",
+  "description": "Analyze the libraries within the package and display the results through the CLI.",
+  "type": "module",
+  "main": "src/index.js",
+  "private": false,
+  "bin": {
+    "mypkg": "./bin/mypkg.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "kisoo",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "package.json",
+    "READEME.md"
+  ],
+  "dependencies": {
+    "node-fetch": "^3.3.2",
+    "zustand": "^4.5.2"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.2",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.3",
+    "sass": "^1.76.0",
+    "typescript": "^5"
+  }
+}
