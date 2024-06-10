@@ -1,6 +1,6 @@
 {
   "name": "mypkg-cli",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Analyze the libraries within the package and display the results through the CLI.",
   "type": "module",
   "main": "src/index.js",
@@ -12,6 +12,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "kisoo",
+  "repository": "https://github.com/Jeong-ki/mypkg-cli",
+  "homepage": "https://github.com/Jeong-ki/mypkg-cli/#readme",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"

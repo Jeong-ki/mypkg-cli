@@ -40,7 +40,7 @@ The tool will display information about the dependencies in your project. Each p
 
 Example output:
 
-<img src="output.png" width="400px" height="480px" />
+![Output Example](output.png)
 
 ## License
 
