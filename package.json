@@ -1,6 +1,6 @@
 {
   "name": "mypkg-cli",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Analyze the libraries within the package and display the results through the CLI.",
   "type": "module",
   "main": "src/index.js",
